@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 角色信息表SQL映射 -->
+<mapper namespace="com.zzfly.dao.RoleInfoMapper">
+	<resultMap id="BaseResultMap" type="com.zzfly.model.RoleInfo">
+		<id column="R_ID" property="rId" jdbcType="INTEGER" />
+		<result column="R_CODE" property="rCode" jdbcType="VARCHAR" />
+		<result column="R_NME" property="rNme" jdbcType="VARCHAR" />
+		<result column="R_STS" property="rSts" jdbcType="CHAR" />
+		<result column="R_RIGHT" property="rRight" jdbcType="VARCHAR" />
+		<result column="CRE_DATE" property="creDate" jdbcType="DATE" />
+		<result column="UPD_DATE" property="updDate" jdbcType="DATE" />
+		<result column="PRE_COL1" property="preCol1" jdbcType="VARCHAR" />
+		<result column="PRE_COL2" property="preCol2" jdbcType="VARCHAR" />
+		<result column="PRE_COL3" property="preCol3" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		R_ID, R_CODE, R_NME, R_STS, R_RIGHT, CRE_DATE, UPD_DATE,
+		PRE_COL1,
+		PRE_COL2, PRE_COL3
+	</sql>
+	<!-- 主键查询角色信息 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_role_info
+		where R_ID = #{rId,jdbcType=INTEGER}
+	</select>
+	<!-- 查询所有角色信息 -->
+	<select id="selectRoles" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_role_info
+	</select>
+	<!-- 条件查询角色信息 -->
+	<select id="selectRoleByRole" resultMap="BaseResultMap"
+		parameterType="com.zzfly.model.RoleInfo">
+		select
+		<include refid="Base_Column_List" />
+		from t_role_info
+		where 1=1
+		<if test="rCode != null">
+			and R_CODE = #{rCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 主键删除角色信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_role_info
+		where R_ID = #{rId,jdbcType=INTEGER}
+	</delete>
+	<!-- 插入角色信息 -->
+	<insert id="insert" parameterType="com.zzfly.model.RoleInfo">
+		insert into t_role_info (R_ID,
+		R_CODE, R_NME,
+		R_STS, R_RIGHT, CRE_DATE, UPD_DATE,
+		PRE_COL1, PRE_COL2,
+		PRE_COL3
+		)
+		values (#{rId,jdbcType=INTEGER}, #{rCode,jdbcType=VARCHAR},
+		#{rNme,jdbcType=VARCHAR},
+		#{rSts,jdbcType=CHAR},
+		#{rRight,jdbcType=VARCHAR}, #{creDate,jdbcType=DATE},
+		#{updDate,jdbcType=DATE},
+		#{preCol1,jdbcType=VARCHAR},
+		#{preCol2,jdbcType=VARCHAR}, #{preCol3,jdbcType=VARCHAR}
+		)
+	</insert>
+	<!-- 不为空插入角色信息 -->
+	<insert id="insertSelective" parameterType="com.zzfly.model.RoleInfo">
+		insert into t_role_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="rId != null">
+				R_ID,
+			</if>
+			<if test="rCode != null">
+				R_CODE,
+			</if>
+			<if test="rNme != null">
+				R_NME,
+			</if>
+			<if test="rSts != null">
+				R_STS,
+			</if>
+			<if test="rRight != null">
+				R_RIGHT,
+			</if>
+			<if test="creDate != null">
+				CRE_DATE,
+			</if>
+			<if test="updDate != null">
+				UPD_DATE,
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1,
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2,
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="rId != null">
+				#{rId,jdbcType=INTEGER},
+			</if>
+			<if test="rCode != null">
+				#{rCode,jdbcType=VARCHAR},
+			</if>
+			<if test="rNme != null">
+				#{rNme,jdbcType=VARCHAR},
+			</if>
+			<if test="rSts != null">
+				#{rSts,jdbcType=CHAR},
+			</if>
+			<if test="rRight != null">
+				#{rRight,jdbcType=VARCHAR},
+			</if>
+			<if test="creDate != null">
+				#{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				#{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				#{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				#{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				#{preCol3,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 主键修改角色信息选择性修改 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.zzfly.model.RoleInfo">
+		update t_role_info
+		<set>
+			<if test="rCode != null">
+				R_CODE = #{rCode,jdbcType=VARCHAR},
+			</if>
+			<if test="rNme != null">
+				R_NME = #{rNme,jdbcType=VARCHAR},
+			</if>
+			<if test="rSts != null">
+				R_STS = #{rSts,jdbcType=CHAR},
+			</if>
+			<if test="rRight != null">
+				R_RIGHT = #{rRight,jdbcType=VARCHAR},
+			</if>
+			<if test="creDate != null">
+				CRE_DATE = #{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				UPD_DATE = #{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1 = #{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3 = #{preCol3,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where R_ID = #{rId,jdbcType=INTEGER}
+	</update>
+	<!-- 主键修改角色信息 全覆盖 -->
+	<update id="updateByPrimaryKey" parameterType="com.zzfly.model.RoleInfo">
+		update t_role_info
+		set R_CODE = #{rCode,jdbcType=VARCHAR},
+		R_NME =
+		#{rNme,jdbcType=VARCHAR},
+		R_STS = #{rSts,jdbcType=CHAR},
+		R_RIGHT =
+		#{rRight,jdbcType=VARCHAR},
+		CRE_DATE = #{creDate,jdbcType=DATE},
+		UPD_DATE = #{updDate,jdbcType=DATE},
+		PRE_COL1 =
+		#{preCol1,jdbcType=VARCHAR},
+		PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+		PRE_COL3 = #{preCol3,jdbcType=VARCHAR}
+		where R_ID =
+		#{rId,jdbcType=INTEGER}
+	</update>
+</mapper>

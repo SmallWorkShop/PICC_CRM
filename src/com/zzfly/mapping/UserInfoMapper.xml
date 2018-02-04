@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 用户信息管理表SQL映射 -->
+<mapper namespace="com.zzfly.dao.UserInfoMapper">
+	<resultMap id="BaseResultMap" type="com.zzfly.model.UserInfo">
+		<id column="U_ID" property="uId" jdbcType="INTEGER" />
+		<result column="U_CODE" property="uCode" jdbcType="VARCHAR" />
+		<result column="U_PWD" property="uPwd" jdbcType="VARCHAR" />
+		<result column="U_P_ID" property="uPId" jdbcType="INTEGER" />
+		<result column="U_TYP" property="uTyp" jdbcType="CHAR" />
+		<result column="U_STS" property="uSts" jdbcType="CHAR" />
+		<result column="U_S_STS" property="uSSts" jdbcType="CHAR" />
+		<result column="U_ADDR" property="uAddr" jdbcType="VARCHAR" />
+		<result column="U_SCOP" property="uScop" jdbcType="VARCHAR" />
+		<result column="U_ROLE" property="uRole" jdbcType="VARCHAR" />
+		<result column="U_NME" property="uNme" jdbcType="VARCHAR" />
+		<result column="U_TP_ID" property="uTpId" jdbcType="VARCHAR" />
+		<result column="U_TEL" property="uTel" jdbcType="VARCHAR" />
+		<result column="U_PHO" property="uPho" jdbcType="VARCHAR" />
+		<result column="CRE_DATE" property="creDate" jdbcType="DATE" />
+		<result column="UPD_DATE" property="updDate" jdbcType="DATE" />
+		<result column="PRE_COL1" property="preCol1" jdbcType="VARCHAR" />
+		<result column="PRE_COL2" property="preCol2" jdbcType="VARCHAR" />
+		<result column="PRE_COL3" property="preCol3" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		U_ID, U_CODE, U_PWD,U_P_ID, U_TYP, U_STS, U_S_STS, U_ADDR,
+		U_SCOP,
+		U_ROLE, U_NME,
+		U_TP_ID,
+		U_TEL, U_PHO, CRE_DATE, UPD_DATE,
+		PRE_COL1,
+		PRE_COL2, PRE_COL3
+	</sql>
+	<!-- 主键查询用户信息 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_info
+		where U_ID = #{uId,jdbcType=INTEGER}
+	</select>
+	<!-- 查询用户信息 -->
+	<select id="selectUsers" resultMap="BaseResultMap"
+		parameterType="com.zzfly.model.UserInfo">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_info
+		where 1=1
+		<if test="uCode != null">
+			and U_CODE = #{uCode,jdbcType=VARCHAR}
+		</if>
+		<if test="uPId != null">
+			and U_P_ID = #{uPId,jdbcType=INTEGER}
+		</if>
+		<if test="pageModel.offset>-1 and pageModel.pageSize>-1">
+			limit #{pageModel.offset,jdbcType=INTEGER} ,
+			#{pageModel.pageSize,jdbcType=INTEGER}
+		</if>
+
+	</select>
+	<!-- 查询总记录数 -->
+	<select id="selectCount" resultType="java.lang.Integer"
+		parameterType="com.zzfly.model.UserInfo">
+		select count(1)
+		from t_user_info
+		where 1=1
+	</select>
+	<!-- 通过用户名及密码查询用户是否存在，用于用户登录 -->
+	<select id="selectUserForLogin" resultMap="BaseResultMap"
+		parameterType="com.zzfly.model.UserInfo">
+		select
+		<include refid="Base_Column_List" />
+		from t_user_info
+		where 1=1
+		and U_CODE = #{uCode,jdbcType=VARCHAR}
+		and
+		U_PWD = #{uPwd,jdbcType=VARCHAR}
+		and U_STS = #{uSts,jdbcType=CHAR}
+		and
+		U_S_STS = #{uSSts,jdbcType=CHAR}
+	</select>
+	<!-- 主键删除用户信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_user_info
+		where U_ID = #{uId,jdbcType=INTEGER}
+	</delete>
+	<!-- 插入新的用户信息 -->
+	<insert id="insert" parameterType="com.zzfly.model.UserInfo">
+		insert into t_user_info (U_ID,
+		U_CODE, U_PWD,U_P_ID,
+		U_TYP, U_STS, U_S_STS, U_ADDR,
+		U_SCOP, U_ROLE,
+		U_NME,
+		U_TP_ID, U_TEL, U_PHO,
+		CRE_DATE, UPD_DATE, PRE_COL1,
+		PRE_COL2,
+		PRE_COL3)
+		values (#{uId,jdbcType=INTEGER}, #{uCode,jdbcType=VARCHAR},
+		#{uPwd,jdbcType=VARCHAR},
+		#{uPId,jdbcType=INTEGER},
+		#{uTyp,jdbcType=CHAR}, #{uSts,jdbcType=CHAR},
+		#{uSSts,jdbcType=CHAR},
+		#{uAddr,jdbcType=VARCHAR},
+		#{uScop,jdbcType=VARCHAR},
+		#{uRole,jdbcType=VARCHAR},
+		#{uNme,jdbcType=VARCHAR},
+		#{uTpId,jdbcType=VARCHAR},
+		#{uTel,jdbcType=VARCHAR},
+		#{uPho,jdbcType=VARCHAR},
+		#{creDate,jdbcType=DATE},
+		#{updDate,jdbcType=DATE},
+		#{preCol1,jdbcType=VARCHAR},
+		#{preCol2,jdbcType=VARCHAR},
+		#{preCol3,jdbcType=VARCHAR})
+	</insert>
+	<!-- 选择性的插入用户信息，字段为空不插入 -->
+	<insert id="insertSelective" parameterType="com.zzfly.model.UserInfo">
+		insert into t_user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="uId != null">
+				U_ID,
+			</if>
+			<if test="uCode != null">
+				U_CODE,
+			</if>
+			<if test="uPwd != null">
+				U_PWD,
+			</if>
+			<if test="uPId != null">
+				U_P_ID,
+			</if>
+			<if test="uTyp != null">
+				U_TYP,
+			</if>
+			<if test="uSts != null">
+				U_STS,
+			</if>
+			<if test="uSSts != null">
+				U_S_STS,
+			</if>
+			<if test="uAddr != null">
+				U_ADDR,
+			</if>
+			<if test="uScop != null">
+				U_SCOP,
+			</if>
+			<if test="uRole != null">
+				U_ROLE,
+			</if>
+			<if test="uNme != null">
+				U_NME,
+			</if>
+			<if test="uTpId != null">
+				U_TP_ID,
+			</if>
+			<if test="uTel != null">
+				U_TEL,
+			</if>
+			<if test="uPho != null">
+				U_PHO,
+			</if>
+			<if test="creDate != null">
+				CRE_DATE,
+			</if>
+			<if test="updDate != null">
+				UPD_DATE,
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1,
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2,
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="uId != null">
+				#{uId,jdbcType=INTEGER},
+			</if>
+			<if test="uCode != null">
+				#{uCode,jdbcType=VARCHAR},
+			</if>
+			<if test="uPwd != null">
+				#{uPwd,jdbcType=VARCHAR},
+			</if>
+			<if test="uPId != null">
+				#{uPId,jdbcType=INTEGER},
+			</if>
+			<if test="uTyp != null">
+				#{uTyp,jdbcType=CHAR},
+			</if>
+			<if test="uSts != null">
+				#{uSts,jdbcType=CHAR},
+			</if>
+			<if test="uSSts != null">
+				#{uSSts,jdbcType=CHAR},
+			</if>
+			<if test="uAddr != null">
+				#{uAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="uScop != null">
+				#{uScop,jdbcType=VARCHAR},
+			</if>
+			<if test="uRole != null">
+				#{uRole,jdbcType=VARCHAR},
+			</if>
+			<if test="uNme != null">
+				#{uNme,jdbcType=VARCHAR},
+			</if>
+			<if test="uTpId != null">
+				#{uTpId,jdbcType=VARCHAR},
+			</if>
+			<if test="uTel != null">
+				#{uTel,jdbcType=VARCHAR},
+			</if>
+			<if test="uPho != null">
+				#{uPho,jdbcType=VARCHAR},
+			</if>
+			<if test="creDate != null">
+				#{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				#{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				#{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				#{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				#{preCol3,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 通过主键选择性的修改用户信息 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.zzfly.model.UserInfo">
+		update t_user_info
+		<set>
+			<if test="uCode != null">
+				U_CODE = #{uCode,jdbcType=VARCHAR},
+			</if>
+			<if test="uPwd != null">
+				U_PWD = #{uPwd,jdbcType=VARCHAR},
+			</if>
+			<if test="uPId != null">
+				U_P_ID = #{uPId,jdbcType=INTEGER},
+			</if>
+			<if test="uTyp != null">
+				U_TYP = #{uTyp,jdbcType=CHAR},
+			</if>
+			<if test="uSts != null">
+				U_STS = #{uSts,jdbcType=CHAR},
+			</if>
+			<if test="uSSts != null">
+				U_S_STS = #{uSSts,jdbcType=CHAR},
+			</if>
+			<if test="uAddr != null">
+				U_ADDR = #{uAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="uScop != null">
+				U_SCOP = #{uScop,jdbcType=VARCHAR},
+			</if>
+			<if test="uRole != null">
+				U_ROLE = #{uRole,jdbcType=VARCHAR},
+			</if>
+			<if test="uNme != null">
+				U_NME = #{uNme,jdbcType=VARCHAR},
+			</if>
+			<if test="uTpId != null">
+				U_TP_ID = #{uTpId,jdbcType=VARCHAR},
+			</if>
+			<if test="uTel != null">
+				U_TEL = #{uTel,jdbcType=VARCHAR},
+			</if>
+			<if test="uPho != null">
+				U_PHO = #{uPho,jdbcType=VARCHAR},
+			</if>
+			<if test="creDate != null">
+				CRE_DATE = #{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				UPD_DATE = #{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1 = #{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3 = #{preCol3,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where U_ID = #{uId,jdbcType=INTEGER}
+	</update>
+	<!-- 通过主键修改用户信息，直接覆盖 -->
+	<update id="updateByPrimaryKey" parameterType="com.zzfly.model.UserInfo">
+		update t_user_info
+		set U_CODE = #{uCode,jdbcType=VARCHAR},
+		U_PWD =
+		#{uPwd,jdbcType=VARCHAR},
+		U_P_ID =
+		#{uPId,jdbcType=INTGER},
+		U_TYP =
+		#{uTyp,jdbcType=CHAR},
+		U_STS =
+		#{uSts,jdbcType=CHAR},
+		U_S_STS =
+		#{uSSts,jdbcType=CHAR},
+		U_ADDR =
+		#{uAddr,jdbcType=VARCHAR},
+		U_SCOP =
+		#{uScop,jdbcType=VARCHAR},
+		U_ROLE =
+		#{uRole,jdbcType=VARCHAR},
+		U_NME =
+		#{uNme,jdbcType=VARCHAR},
+		U_TP_ID =
+		#{uTpId,jdbcType=VARCHAR},
+		U_TEL =
+		#{uTel,jdbcType=VARCHAR},
+		U_PHO =
+		#{uPho,jdbcType=VARCHAR},
+		CRE_DATE =
+		#{creDate,jdbcType=DATE},
+		UPD_DATE
+		= #{updDate,jdbcType=DATE},
+		PRE_COL1 =
+		#{preCol1,jdbcType=VARCHAR},
+		PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+		PRE_COL3 =
+		#{preCol3,jdbcType=VARCHAR}
+		where U_ID =
+		#{uId,jdbcType=INTEGER}
+	</update>
+</mapper>

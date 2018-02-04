@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 日志表sql映射 -->
+<mapper namespace="com.zzfly.dao.BusiJrnMapper">
+	<resultMap id="BaseResultMap" type="com.zzfly.model.BusiJrn">
+		<id column="JRN_NO" property="jrnNo" jdbcType="INTEGER" />
+		<result column="AC_DTE" property="acDte" jdbcType="TIMESTAMP" />
+		<result column="OPER_NO" property="operNo" jdbcType="CHAR" />
+		<result column="OPER_NME" property="operNme" jdbcType="VARCHAR" />
+		<result column="CUS_ID" property="cusId" jdbcType="INTEGER" />
+		<result column="PLATE_NO" property="plateNo" jdbcType="CHAR" />
+		<result column="FRAME_NO" property="frameNo" jdbcType="VARCHAR" />
+		<result column="CUS_NME" property="cusNme" jdbcType="VARCHAR" />
+		<result column="BUSIER_ID" property="busierId" jdbcType="INTEGER" />
+		<result column="OPER_INFO" property="operInfo" jdbcType="VARCHAR" />
+		<result column="PRE_COL1" property="preCol1" jdbcType="VARCHAR" />
+		<result column="PRE_COL2" property="preCol2" jdbcType="VARCHAR" />
+		<result column="PRE_COL3" property="preCol3" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		JRN_NO, AC_DTE, OPER_NO, OPER_NME, CUS_ID, PLATE_NO,
+		FRAME_NO, CUS_NME,
+		BUSIER_ID,
+		OPER_INFO, PRE_COL1, PRE_COL2, PRE_COL3
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_busi_jrn
+		where JRN_NO = #{jrnNo,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_busi_jrn
+		where JRN_NO = #{jrnNo,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.zzfly.model.BusiJrn">
+		insert into t_busi_jrn
+		(JRN_NO, AC_DTE, OPER_NO,
+		OPER_NME, CUS_ID, PLATE_NO,
+		FRAME_NO, CUS_NME,
+		BUSIER_ID,
+		OPER_INFO, PRE_COL1, PRE_COL2,
+		PRE_COL3)
+		values
+		(#{jrnNo,jdbcType=INTEGER}, #{acDte,jdbcType=TIMESTAMP},
+		#{operNo,jdbcType=CHAR},
+		#{operNme,jdbcType=VARCHAR},
+		#{cusId,jdbcType=INTEGER}, #{plateNo,jdbcType=CHAR},
+		#{frameNo,jdbcType=VARCHAR}, #{cusNme,jdbcType=VARCHAR},
+		#{busierId,jdbcType=INTEGER},
+		#{operInfo,jdbcType=VARCHAR},
+		#{preCol1,jdbcType=VARCHAR}, #{preCol2,jdbcType=VARCHAR},
+		#{preCol3,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.zzfly.model.BusiJrn">
+		insert into t_busi_jrn
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="jrnNo != null">
+				JRN_NO,
+			</if>
+			<if test="acDte != null">
+				AC_DTE,
+			</if>
+			<if test="operNo != null">
+				OPER_NO,
+			</if>
+			<if test="operNme != null">
+				OPER_NME,
+			</if>
+			<if test="cusId != null">
+				CUS_ID,
+			</if>
+			<if test="plateNo != null">
+				PLATE_NO,
+			</if>
+			<if test="frameNo != null">
+				FRAME_NO,
+			</if>
+			<if test="cusNme != null">
+				CUS_NME,
+			</if>
+			<if test="busierId != null">
+				BUSIER_ID,
+			</if>
+			<if test="operInfo != null">
+				OPER_INFO,
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1,
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2,
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="jrnNo != null">
+				#{jrnNo,jdbcType=INTEGER},
+			</if>
+			<if test="acDte != null">
+				#{acDte,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operNo != null">
+				#{operNo,jdbcType=CHAR},
+			</if>
+			<if test="operNme != null">
+				#{operNme,jdbcType=VARCHAR},
+			</if>
+			<if test="cusId != null">
+				#{cusId,jdbcType=INTEGER},
+			</if>
+			<if test="plateNo != null">
+				#{plateNo,jdbcType=CHAR},
+			</if>
+			<if test="frameNo != null">
+				#{frameNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cusNme != null">
+				#{cusNme,jdbcType=VARCHAR},
+			</if>
+			<if test="busierId != null">
+				#{busierId,jdbcType=INTEGER},
+			</if>
+			<if test="operInfo != null">
+				#{operInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol1 != null">
+				#{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				#{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				#{preCol3,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.zzfly.model.BusiJrn">
+		update t_busi_jrn
+		<set>
+			<if test="acDte != null">
+				AC_DTE = #{acDte,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operNo != null">
+				OPER_NO = #{operNo,jdbcType=CHAR},
+			</if>
+			<if test="operNme != null">
+				OPER_NME = #{operNme,jdbcType=VARCHAR},
+			</if>
+			<if test="cusId != null">
+				CUS_ID = #{cusId,jdbcType=INTEGER},
+			</if>
+			<if test="plateNo != null">
+				PLATE_NO = #{plateNo,jdbcType=CHAR},
+			</if>
+			<if test="frameNo != null">
+				FRAME_NO = #{frameNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cusNme != null">
+				CUS_NME = #{cusNme,jdbcType=VARCHAR},
+			</if>
+			<if test="busierId != null">
+				BUSIER_ID = #{busierId,jdbcType=INTEGER},
+			</if>
+			<if test="operInfo != null">
+				OPER_INFO = #{operInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1 = #{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3 = #{preCol3,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where JRN_NO = #{jrnNo,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.zzfly.model.BusiJrn">
+		update t_busi_jrn
+		set AC_DTE = #{acDte,jdbcType=TIMESTAMP},
+		OPER_NO =
+		#{operNo,jdbcType=CHAR},
+		OPER_NME = #{operNme,jdbcType=VARCHAR},
+		CUS_ID
+		= #{cusId,jdbcType=INTEGER},
+		PLATE_NO = #{plateNo,jdbcType=CHAR},
+		FRAME_NO = #{frameNo,jdbcType=VARCHAR},
+		CUS_NME =
+		#{cusNme,jdbcType=VARCHAR},
+		BUSIER_ID = #{busierId,jdbcType=INTEGER},
+		OPER_INFO = #{operInfo,jdbcType=VARCHAR},
+		PRE_COL1 =
+		#{preCol1,jdbcType=VARCHAR},
+		PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+		PRE_COL3 = #{preCol3,jdbcType=VARCHAR}
+		where JRN_NO =
+		#{jrnNo,jdbcType=INTEGER}
+	</update>
+	<!-- 根据前台传来的客户ID以及操作码查询客户的操作记录按操作时间倒序排序 -->
+	<select id="selectCustBusiByBj" resultMap="BusiJrnWithUser"
+		parameterType="com.zzfly.model.BusiJrn">
+		select t1.*
+		,t2.U_ID
+		,t2.U_CODE
+		,t2.U_NME
+		,t2.U_TEL
+		,t2.U_PHO
+		from
+		t_busi_jrn t1
+		left join
+		t_user_info t2
+		on
+		t1.BUSIER_ID =
+		t2.U_ID
+		where
+		1=1
+		<if test="cusId != null and '' != cusId">
+			and t1.CUS_ID = #{cusId,jdbcType=INTEGER}
+		</if>
+		<if test="operNo !=null and '' != operNo">
+			and t1.OPER_NO like CONCAT(#{operNo},'%')
+		</if>
+		order by t1.AC_DTE desc
+	</select>
+	<resultMap type="com.zzfly.model.BusiJrn" id="BusiJrnWithUser">
+		<id column="JRN_NO" property="jrnNo" jdbcType="INTEGER" />
+		<result column="AC_DTE" property="acDte" jdbcType="TIMESTAMP" />
+		<result column="OPER_NO" property="operNo" jdbcType="CHAR" />
+		<result column="OPER_NME" property="operNme" jdbcType="VARCHAR" />
+		<result column="CUS_ID" property="cusId" jdbcType="INTEGER" />
+		<result column="PLATE_NO" property="plateNo" jdbcType="CHAR" />
+		<result column="FRAME_NO" property="frameNo" jdbcType="VARCHAR" />
+		<result column="CUS_NME" property="cusNme" jdbcType="VARCHAR" />
+		<result column="BUSIER_ID" property="busierId" jdbcType="INTEGER" />
+		<result column="OPER_INFO" property="operInfo" jdbcType="VARCHAR" />
+		<result column="PRE_COL1" property="preCol1" jdbcType="VARCHAR" />
+		<result column="PRE_COL2" property="preCol2" jdbcType="VARCHAR" />
+		<result column="PRE_COL3" property="preCol3" jdbcType="VARCHAR" />
+		<association property="userInfo" column="BUSIER_ID"
+			javaType="com.zzfly.model.UserInfo">
+			<id column="U_ID" property="uId" jdbcType="INTEGER" />
+			<result column="U_CODE" property="uCode" jdbcType="VARCHAR" />
+			<result column="U_NME" property="uNme" jdbcType="VARCHAR" />
+			<result column="U_TEL" property="uTel" jdbcType="VARCHAR" />
+			<result column="U_PHO" property="uPho" jdbcType="VARCHAR" />
+		</association>
+	</resultMap>
+</mapper>

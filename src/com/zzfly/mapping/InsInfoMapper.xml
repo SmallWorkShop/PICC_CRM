@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 险种信息sql映射 -->
+<mapper namespace="com.zzfly.dao.InsInfoMapper">
+	<resultMap id="BaseResultMap" type="com.zzfly.model.InsInfo">
+		<id column="INS_ID" property="insId" jdbcType="INTEGER" />
+		<result column="INS_NME" property="insNme" jdbcType="VARCHAR" />
+		<result column="INS_KND" property="insKnd" jdbcType="CHAR" />
+		<result column="INS_AMT" property="insAmt" jdbcType="DECIMAL" />
+		<result column="INS_STS" property="insSts" jdbcType="CHAR" />
+		<result column="INS_S_AMT" property="insSAmt" jdbcType="DECIMAL" />
+		<result column="INS_LIM" property="insLim" jdbcType="DECIMAL" />
+		<result column="CRE_DATE" property="creDate" jdbcType="DATE" />
+		<result column="UPD_DATE" property="updDate" jdbcType="DATE" />
+		<result column="PRE_COL1" property="preCol1" jdbcType="VARCHAR" />
+		<result column="PRE_COL2" property="preCol2" jdbcType="VARCHAR" />
+		<result column="PRE_COL3" property="preCol3" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		INS_ID, INS_NME, INS_KND, INS_AMT, INS_STS, INS_S_AMT, INS_LIM, CRE_DATE,
+		UPD_DATE,
+		PRE_COL1, PRE_COL2, PRE_COL3
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_ins_info
+		where INS_ID = #{insId,jdbcType=INTEGER}
+	</select>
+	<!-- 根据条件精确查询险种信息 -->
+	<select id="loadByInsInfo" resultMap="BaseResultMap"
+		parameterType="com.zzfly.model.InsInfo">
+		select
+		<include refid="Base_Column_List" />
+		from t_ins_info
+		where 1=1
+		<if test="insNme != null and '' != insNme">
+			and INS_NME = #{insNme,jdbcType=VARCHAR}
+		</if>
+		<if test="insKnd != null and '' != insKnd">
+			and INS_KND = #{insKnd,jdbcType=CHAR}
+		</if>
+		<if test="preCol1 != null and '' != preCol1">
+			and PRE_COL1 = #{preCol1,jdbcType=VARCHAR}
+		</if>
+		<if test="pageModel.offset>-1 and pageModel.pageSize>-1">
+			limit #{pageModel.offset,jdbcType=INTEGER} ,
+			#{pageModel.pageSize,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 查询总记录数 -->
+	<select id="selectCount" resultType="java.lang.Integer"
+		parameterType="com.zzfly.model.InsInfo">
+		select count(1)
+		from t_ins_info
+		where 1=1
+		<if test="insNme != null and '' != insNme">
+			and INS_NME = #{insNme,jdbcType=INTEGER}
+		</if>
+		<if test="insKnd != null and '' != insKnd">
+			and INS_KND = #{insKnd,jdbcType=INTEGER}
+		</if>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_ins_info
+		where INS_ID = #{insId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.zzfly.model.InsInfo">
+		insert into t_ins_info (INS_ID, INS_NME, INS_KND,
+		INS_AMT, INS_STS, INS_S_AMT,
+		INS_LIM, CRE_DATE, UPD_DATE,
+		PRE_COL1, PRE_COL2, PRE_COL3
+		)
+		values (#{insId,jdbcType=INTEGER}, #{insNme,jdbcType=VARCHAR},
+		#{insKnd,jdbcType=CHAR},
+		#{insAmt,jdbcType=DECIMAL}, #{insSts,jdbcType=CHAR}, #{insSAmt,jdbcType=DECIMAL},
+		#{insLim,jdbcType=DECIMAL}, #{creDate,jdbcType=DATE},
+		#{updDate,jdbcType=DATE},
+		#{preCol1,jdbcType=VARCHAR}, #{preCol2,jdbcType=VARCHAR}, #{preCol3,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.zzfly.model.InsInfo">
+		insert into t_ins_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="insId != null">
+				INS_ID,
+			</if>
+			<if test="insNme != null">
+				INS_NME,
+			</if>
+			<if test="insKnd != null">
+				INS_KND,
+			</if>
+			<if test="insAmt != null">
+				INS_AMT,
+			</if>
+			<if test="insSts != null">
+				INS_STS,
+			</if>
+			<if test="insSAmt != null">
+				INS_S_AMT,
+			</if>
+			<if test="insLim != null">
+				INS_LIM,
+			</if>
+			<if test="creDate != null">
+				CRE_DATE,
+			</if>
+			<if test="updDate != null">
+				UPD_DATE,
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1,
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2,
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="insId != null">
+				#{insId,jdbcType=INTEGER},
+			</if>
+			<if test="insNme != null">
+				#{insNme,jdbcType=VARCHAR},
+			</if>
+			<if test="insKnd != null">
+				#{insKnd,jdbcType=CHAR},
+			</if>
+			<if test="insAmt != null">
+				#{insAmt,jdbcType=DECIMAL},
+			</if>
+			<if test="insSts != null">
+				#{insSts,jdbcType=CHAR},
+			</if>
+			<if test="insSAmt != null">
+				#{insSAmt,jdbcType=DECIMAL},
+			</if>
+			<if test="insLim != null">
+				#{insLim,jdbcType=DECIMAL},
+			</if>
+			<if test="creDate != null">
+				#{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				#{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				#{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				#{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				#{preCol3,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.zzfly.model.InsInfo">
+		update t_ins_info
+		<set>
+			<if test="insNme != null">
+				INS_NME = #{insNme,jdbcType=VARCHAR},
+			</if>
+			<if test="insKnd != null">
+				INS_KND = #{insKnd,jdbcType=CHAR},
+			</if>
+			<if test="insAmt != null">
+				INS_AMT = #{insAmt,jdbcType=DECIMAL},
+			</if>
+			<if test="insSts != null">
+				INS_STS = #{insSts,jdbcType=CHAR},
+			</if>
+			<if test="insSAmt != null">
+				INS_S_AMT = #{insSAmt,jdbcType=DECIMAL},
+			</if>
+			<if test="insLim != null">
+				INS_LIM = #{insLim,jdbcType=DECIMAL},
+			</if>
+			<if test="creDate != null">
+				CRE_DATE = #{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				UPD_DATE = #{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1 = #{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3 = #{preCol3,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where INS_ID = #{insId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.zzfly.model.InsInfo">
+		update t_ins_info
+		set INS_NME = #{insNme,jdbcType=VARCHAR},
+		INS_KND = #{insKnd,jdbcType=CHAR},
+		INS_AMT = #{insAmt,jdbcType=DECIMAL},
+		INS_STS = #{insSts,jdbcType=CHAR},
+		INS_S_AMT = #{insSAmt,jdbcType=DECIMAL},
+		INS_LIM = #{insLim,jdbcType=DECIMAL},
+		CRE_DATE = #{creDate,jdbcType=DATE},
+		UPD_DATE = #{updDate,jdbcType=DATE},
+		PRE_COL1 = #{preCol1,jdbcType=VARCHAR},
+		PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+		PRE_COL3 = #{preCol3,jdbcType=VARCHAR}
+		where INS_ID = #{insId,jdbcType=INTEGER}
+	</update>
+</mapper>

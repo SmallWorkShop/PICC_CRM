@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 数据字典sql映射 -->
+<mapper namespace="com.zzfly.dao.DictMapper">
+	<resultMap id="BaseResultMap" type="com.zzfly.model.Dict">
+		<id column="DICT_ID" property="dictId" jdbcType="INTEGER" />
+		<result column="DICT_KND" property="dictKnd" jdbcType="VARCHAR" />
+		<result column="DICT_KND_NME" property="dictKndNme" jdbcType="VARCHAR" />
+		<result column="DICT_CODE" property="dictCode" jdbcType="VARCHAR" />
+		<result column="DICT_NME" property="dictNme" jdbcType="VARCHAR" />
+		<result column="DIST_P_CODE" property="distPCode" jdbcType="VARCHAR" />
+		<result column="DIST_P_NME" property="distPNme" jdbcType="VARCHAR" />
+		<result column="DIST_STS" property="distSts" jdbcType="CHAR" />
+		<result column="CRE_DATE" property="creDate" jdbcType="DATE" />
+		<result column="UPD_DATE" property="updDate" jdbcType="DATE" />
+		<result column="PRE_COL1" property="preCol1" jdbcType="VARCHAR" />
+		<result column="PRE_COL2" property="preCol2" jdbcType="VARCHAR" />
+		<result column="PRE_COL3" property="preCol3" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		DICT_ID, DICT_KND, DICT_KND_NME, DICT_CODE, DICT_NME,
+		DIST_P_CODE, DIST_P_NME,
+		DIST_STS,
+		CRE_DATE, UPD_DATE, PRE_COL1,
+		PRE_COL2, PRE_COL3
+	</sql>
+	<!-- 根据主键数据字典Id查询出一条记录 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_dict
+		where DICT_ID = #{dictId,jdbcType=INTEGER}
+	</select>
+	<!-- 根据数据字典的相关栏位查出一个list集合 -->
+	<select id="selectDictsByDict" resultMap="BaseResultMap"
+		parameterType="com.zzfly.model.Dict">
+		select
+		<include refid="Base_Column_List" />
+		from t_dict
+		where 1 = 1
+		<if test="dictKnd != null">
+			and DICT_KND = #{dictKnd,jdbcType=VARCHAR}
+		</if>
+		<if test="dictCode != null">
+			and DICT_CODE = #{dictCode,jdbcType=VARCHAR}
+		</if>
+		<if test="distPCode != null">
+			and DIST_P_CODE = #{distPCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_dict
+		where DICT_ID = #{dictId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.zzfly.model.Dict">
+		insert into t_dict (DICT_ID,
+		DICT_KND, DICT_KND_NME,
+		DICT_CODE, DICT_NME, DIST_P_CODE,
+		DIST_P_NME,
+		DIST_STS, CRE_DATE,
+		UPD_DATE, PRE_COL1, PRE_COL2,
+		PRE_COL3)
+		values
+		(#{dictId,jdbcType=INTEGER}, #{dictKnd,jdbcType=VARCHAR},
+		#{dictKndNme,jdbcType=VARCHAR},
+		#{dictCode,jdbcType=VARCHAR},
+		#{dictNme,jdbcType=VARCHAR}, #{distPCode,jdbcType=VARCHAR},
+		#{distPNme,jdbcType=VARCHAR}, #{distSts,jdbcType=CHAR},
+		#{creDate,jdbcType=DATE},
+		#{updDate,jdbcType=DATE},
+		#{preCol1,jdbcType=VARCHAR}, #{preCol2,jdbcType=VARCHAR},
+		#{preCol3,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.zzfly.model.Dict">
+		insert into t_dict
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dictId != null">
+				DICT_ID,
+			</if>
+			<if test="dictKnd != null">
+				DICT_KND,
+			</if>
+			<if test="dictKndNme != null">
+				DICT_KND_NME,
+			</if>
+			<if test="dictCode != null">
+				DICT_CODE,
+			</if>
+			<if test="dictNme != null">
+				DICT_NME,
+			</if>
+			<if test="distPCode != null">
+				DIST_P_CODE,
+			</if>
+			<if test="distPNme != null">
+				DIST_P_NME,
+			</if>
+			<if test="distSts != null">
+				DIST_STS,
+			</if>
+			<if test="creDate != null">
+				CRE_DATE,
+			</if>
+			<if test="updDate != null">
+				UPD_DATE,
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1,
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2,
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dictId != null">
+				#{dictId,jdbcType=INTEGER},
+			</if>
+			<if test="dictKnd != null">
+				#{dictKnd,jdbcType=VARCHAR},
+			</if>
+			<if test="dictKndNme != null">
+				#{dictKndNme,jdbcType=VARCHAR},
+			</if>
+			<if test="dictCode != null">
+				#{dictCode,jdbcType=VARCHAR},
+			</if>
+			<if test="dictNme != null">
+				#{dictNme,jdbcType=VARCHAR},
+			</if>
+			<if test="distPCode != null">
+				#{distPCode,jdbcType=VARCHAR},
+			</if>
+			<if test="distPNme != null">
+				#{distPNme,jdbcType=VARCHAR},
+			</if>
+			<if test="distSts != null">
+				#{distSts,jdbcType=CHAR},
+			</if>
+			<if test="creDate != null">
+				#{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				#{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				#{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				#{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				#{preCol3,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.zzfly.model.Dict">
+		update t_dict
+		<set>
+			<if test="dictKnd != null">
+				DICT_KND = #{dictKnd,jdbcType=VARCHAR},
+			</if>
+			<if test="dictKndNme != null">
+				DICT_KND_NME = #{dictKndNme,jdbcType=VARCHAR},
+			</if>
+			<if test="dictCode != null">
+				DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+			</if>
+			<if test="dictNme != null">
+				DICT_NME = #{dictNme,jdbcType=VARCHAR},
+			</if>
+			<if test="distPCode != null">
+				DIST_P_CODE = #{distPCode,jdbcType=VARCHAR},
+			</if>
+			<if test="distPNme != null">
+				DIST_P_NME = #{distPNme,jdbcType=VARCHAR},
+			</if>
+			<if test="distSts != null">
+				DIST_STS = #{distSts,jdbcType=CHAR},
+			</if>
+			<if test="creDate != null">
+				CRE_DATE = #{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				UPD_DATE = #{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1 = #{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3 = #{preCol3,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where DICT_ID = #{dictId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.zzfly.model.Dict">
+		update t_dict
+		set
+		DICT_KND = #{dictKnd,jdbcType=VARCHAR},
+		DICT_KND_NME =
+		#{dictKndNme,jdbcType=VARCHAR},
+		DICT_CODE =
+		#{dictCode,jdbcType=VARCHAR},
+		DICT_NME = #{dictNme,jdbcType=VARCHAR},
+		DIST_P_CODE = #{distPCode,jdbcType=VARCHAR},
+		DIST_P_NME =
+		#{distPNme,jdbcType=VARCHAR},
+		DIST_STS = #{distSts,jdbcType=CHAR},
+		CRE_DATE = #{creDate,jdbcType=DATE},
+		UPD_DATE =
+		#{updDate,jdbcType=DATE},
+		PRE_COL1 = #{preCol1,jdbcType=VARCHAR},
+		PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+		PRE_COL3 =
+		#{preCol3,jdbcType=VARCHAR}
+		where DICT_ID = #{dictId,jdbcType=INTEGER}
+	</update>
+</mapper>

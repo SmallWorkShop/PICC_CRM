@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 客户信息sql映射 -->
+<mapper namespace="com.zzfly.dao.CustInfoMapper">
+	<resultMap id="BaseResultMap" type="com.zzfly.model.CustInfo">
+		<id column="CUS_ID" property="cusId" jdbcType="INTEGER" />
+		<result column="PLATE_NO" property="plateNo" jdbcType="CHAR" />
+		<result column="BRAND" property="brand" jdbcType="VARCHAR" />
+		<result column="BRAND_TYP" property="brandTyp" jdbcType="VARCHAR" />
+		<result column="FRAME_NO" property="frameNo" jdbcType="VARCHAR" />
+		<result column="ENGINE_NO" property="engineNo" jdbcType="VARCHAR" />
+		<result column="CUS_ID_NO" property="cusIdNo" jdbcType="VARCHAR" />
+		<result column="CUS_NME" property="cusNme" jdbcType="VARCHAR" />
+		<result column="CUS_ADDR" property="cusAddr" jdbcType="VARCHAR" />
+		<result column="CUS_TEL" property="cusTel" jdbcType="VARCHAR" />
+		<result column="CUS_PHON" property="cusPhon" jdbcType="VARCHAR" />
+		<result column="LOG_DATE" property="logDate" jdbcType="VARCHAR" />
+		<result column="CUS_STS" property="cusSts" jdbcType="CHAR" />
+		<result column="BUSIER_ID" property="busierId" jdbcType="INTEGER" />
+		<result column="ISSU_ID" property="issuId" jdbcType="INTEGER" />
+		<result column="DIST_ID" property="distId" jdbcType="INTEGER" />
+		<result column="INSUR_ID" property="insurId" jdbcType="INTEGER" />
+		<result column="CRE_DATE" property="creDate" jdbcType="DATE" />
+		<result column="UPD_DATE" property="updDate" jdbcType="DATE" />
+		<result column="PRE_COL1" property="preCol1" jdbcType="VARCHAR" />
+		<result column="PRE_COL2" property="preCol2" jdbcType="VARCHAR" />
+		<result column="PRE_COL3" property="preCol3" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		CUS_ID, PLATE_NO, BRAND, BRAND_TYP, FRAME_NO, ENGINE_NO,
+		CUS_ID_NO, CUS_NME,
+		CUS_ADDR,
+		CUS_TEL, CUS_PHON, LOG_DATE, CUS_STS,
+		BUSIER_ID, ISSU_ID, DIST_ID, INSUR_ID,
+		CRE_DATE,
+		UPD_DATE, PRE_COL1,
+		PRE_COL2, PRE_COL3
+	</sql>
+	<!-- 主键查询客户基本信息 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_cust_info
+		where CUS_ID = #{cusId,jdbcType=INTEGER}
+	</select>
+	<!-- 根据条件精确查询客户信息 -->
+	<select id="findByCustInfo" resultMap="BaseResultMap"
+		parameterType="com.zzfly.model.CustInfo">
+		select
+		<include refid="Base_Column_List" />
+		from t_cust_info
+		where 1=1
+		<if test="plateNo != null and '' != plateNo">
+			and PLATE_NO = #{plateNo,jdbcType=CHAR}
+		</if>
+		<if test="frameNo != null and '' != frameNo">
+			and FRAME_NO = #{frameNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cusNme != null and '' != cusNme">
+			and CUS_NME = #{cusNme,jdbcType=VARCHAR}
+		</if>
+		<if test="cusPhon != null and '' != cusPhon">
+			and CUS_PHON = #{cusPhon,jdbcType=VARCHAR}
+		</if>
+		<if test="cusSts != null and '' != cusSts">
+			and CUS_STS = #{cusSts,jdbcType=CHAR}
+		</if>
+		<if test="busierId != null and '' != busierId">
+			and BUSIER_ID = #{busierId,jdbcType=INTEGER}
+		</if>
+		<if test="pageModel.offset>-1 and pageModel.pageSize>-1">
+			limit #{pageModel.offset,jdbcType=INTEGER} ,
+			#{pageModel.pageSize,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 根据条件模糊查询客户信息 -->
+	<select id="findByCustInfoLike" resultMap="BaseResultMap"
+		parameterType="com.zzfly.model.CustInfo">
+		select
+		<include refid="Base_Column_List" />
+		from t_cust_info
+		where 1=1
+		<if test="plateNo != null and '' != plateNo">
+			and PLATE_NO like CONCAT('%',#{plateNo},'%')
+		</if>
+		<if test="frameNo != null and '' != frameNo">
+			and FRAME_NO like CONCAT('%',#{frameNo},'%')
+		</if>
+		<if test="cusNme != null and '' != cusNme">
+			and CUS_NME like CONCAT('%',#{cusNme},'%')
+		</if>
+		<if test="cusPhon != null and '' != cusPhon">
+			and CUS_PHON like CONCAT('%',#{cusPhon},'%')
+		</if>
+		<if test="cusSts != null and '' != cusSts">
+			and CUS_STS like CONCAT('%',#{cusSts},'%')
+		</if>
+		<if test="pageModel.offset>-1 and pageModel.pageSize>-1">
+			limit #{pageModel.offset,jdbcType=INTEGER} ,
+			#{pageModel.pageSize,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 根据条件查询下属客户待配送清单 -->
+	<select id="findCustInfoForUpd" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		t1.*
+		from t_cust_info t1
+		<if test="custInfo.insurInfo != null">
+			<if
+				test="custInfo.insurInfo.addr != null and '' != custInfo.insurInfo.addr">
+				left join
+				t_insur_info t2
+				on
+				t1.CUS_ID = t2.CUS_ID
+			</if>
+		</if>
+		where 1=1
+		<if test="custInfo.plateNo != null and '' != custInfo.plateNo">
+			and PLATE_NO = #{custInfo.plateNo,jdbcType=CHAR}
+		</if>
+		<if test="custInfo.frameNo != null and '' != custInfo.frameNo">
+			and FRAME_NO = #{custInfo.frameNo,jdbcType=VARCHAR}
+		</if>
+		<if test="custInfo.cusNme != null and '' != custInfo.cusNme">
+			and CUS_NME = #{custInfo.cusNme,jdbcType=VARCHAR}
+		</if>
+		<if test="custInfo.cusPhon != null and '' != custInfo.cusPhon">
+			and CUS_PHON = #{custInfo.cusPhon,jdbcType=VARCHAR}
+		</if>
+		<if test="custInfo.cusSts != null and '' != custInfo.cusSts">
+			and CUS_STS = #{custInfo.cusSts,jdbcType=CHAR}
+		</if>
+		<if test="str != null and '' != str">
+			and BUSIER_ID in (${str})
+		</if>
+		<if test="custInfo.insurInfo != null">
+			<if
+				test="custInfo.insurInfo.addr != null and '' != custInfo.insurInfo.addr">
+				and t2.ADDR like CONCAT('%',#{custInfo.insurInfo.addr},'%')
+			</if>
+		</if>
+		<if test="custInfo.pageModel.offset>-1 and custInfo.pageModel.pageSize>-1">
+			limit #{custInfo.pageModel.offset,jdbcType=INTEGER} ,
+			#{custInfo.pageModel.pageSize,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 精确条件查询客户信息记录数 -->
+	<select id="selectCounts" parameterType="com.zzfly.model.CustInfo"
+		resultType="java.lang.Integer">
+		select
+		count(1)
+		from t_cust_info
+		where 1=1
+		<if test="plateNo != null and '' != plateNo">
+			and PLATE_NO = #{plateNo,jdbcType=CHAR}
+		</if>
+		<if test="frameNo != null and '' != frameNo">
+			and FRAME_NO = #{frameNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cusNme != null and '' != cusNme">
+			and CUS_NME = #{cusNme,jdbcType=VARCHAR}
+		</if>
+		<if test="cusPhon != null and '' != cusPhon">
+			and CUS_PHON = #{cusPhon,jdbcType=VARCHAR}
+		</if>
+		<if test="cusSts != null and '' != cusSts">
+			and CUS_STS = #{cusSts,jdbcType=CHAR}
+		</if>
+	</select>
+	<!-- 模糊条件查询客户信息记录数 -->
+	<select id="selectCountsOfLike" parameterType="com.zzfly.model.CustInfo"
+		resultType="java.lang.Integer">
+		select
+		count(1)
+		from t_cust_info
+		where 1=1
+		<if test="plateNo != null and '' != plateNo">
+			and PLATE_NO like CONCAT('%',#{plateNo},'%')
+		</if>
+		<if test="frameNo != null and '' != frameNo">
+			and FRAME_NO like CONCAT('%',#{frameNo},'%')
+		</if>
+		<if test="cusNme != null and '' != cusNme">
+			and CUS_NME like CONCAT('%',#{cusNme},'%')
+		</if>
+		<if test="cusPhon != null and '' != cusPhon">
+			and CUS_PHON like CONCAT('%',#{cusPhon},'%')
+		</if>
+		<if test="cusSts != null and '' != cusSts">
+			and CUS_STS like CONCAT('%',#{cusSts},'%')
+		</if>
+	</select>
+	<!-- 根据条件查询下属客户的数量 -->
+	<select id="selectCountsForUpd" parameterType="map"
+		resultType="java.lang.Integer">
+		select
+		count(1)
+		from t_cust_info t1
+		<if test="custInfo.insurInfo != null">
+			<if
+				test="custInfo.insurInfo.addr != null and '' != custInfo.insurInfo.addr">
+				left join
+				t_insur_info t2
+				on
+				t1.CUS_ID = t2.CUS_ID
+			</if>
+		</if>
+		where 1=1
+		<if test="custInfo.plateNo != null and '' != custInfo.plateNo">
+			and PLATE_NO = #{custInfo.plateNo,jdbcType=CHAR}
+		</if>
+		<if test="custInfo.frameNo != null and '' != custInfo.frameNo">
+			and FRAME_NO = #{custInfo.frameNo,jdbcType=VARCHAR}
+		</if>
+		<if test="custInfo.cusNme != null and '' != custInfo.cusNme">
+			and CUS_NME = #{custInfo.cusNme,jdbcType=VARCHAR}
+		</if>
+		<if test="custInfo.cusPhon != null and '' != custInfo.cusPhon">
+			and CUS_PHON = #{custInfo.cusPhon,jdbcType=VARCHAR}
+		</if>
+		<if test="custInfo.cusSts != null and '' != custInfo.cusSts">
+			and CUS_STS = #{custInfo.cusSts,jdbcType=CHAR}
+		</if>
+		<if test="str != null and '' != str">
+			and BUSIER_ID in (${str})
+		</if>
+		<if test="custInfo.insurInfo != null">
+			<if
+				test="custInfo.insurInfo.addr != null and '' != custInfo.insurInfo.addr">
+				and t2.ADDR like CONCAT('%',#{custInfo.insurInfo.addr},'%')
+			</if>
+		</if>
+	</select>
+	<!-- 查询客户信息判断下次联系时间，如果在3个小时之内就得联系 -->
+	<select id="findCustInfoForConn" resultMap="BaseResultMap"
+		parameterType="com.zzfly.model.CustInfo">
+		select t1.*
+		from t_cust_info t1
+		left JOIN
+		(select s0.CUS_ID
+		,MAX(s0.NEXT_CONN) as maxTime
+		from t_conn_jrn s0
+		where 1=1
+		GROUP BY s0.CUS_ID) t2
+		on
+		t1.cus_id = t2.cus_id
+		where 1=1
+		<if test="cusSts != null and '' != cusSts">
+			and CUS_STS = #{cusSts,jdbcType=CHAR}
+		</if>
+		<if test="busierId != null and '' != busierId">
+			and BUSIER_ID = #{busierId,jdbcType=INTEGER}
+		</if>
+		and TIMEDIFF(t2.maxTime,CURRENT_TIMESTAMP()) &lt; '03:00:00'
+		and TIMEDIFF(t2.maxTime,CURRENT_TIMESTAMP()) &gt; '00:00:00'
+	</select>
+
+	<!-- 主键删除客户基本信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_cust_info
+		where CUS_ID = #{cusId,jdbcType=INTEGER}
+	</delete>
+	<!-- 插入新的客户信息 -->
+	<insert id="insert" parameterType="com.zzfly.model.CustInfo">
+		insert into t_cust_info
+		(CUS_ID, PLATE_NO, BRAND,
+		BRAND_TYP, FRAME_NO, ENGINE_NO,
+		CUS_ID_NO,
+		CUS_NME, CUS_ADDR,
+		CUS_TEL, CUS_PHON, LOG_DATE,
+		CUS_STS, BUSIER_ID,
+		ISSU_ID,
+		DIST_ID, INSUR_ID, CRE_DATE,
+		UPD_DATE, PRE_COL1, PRE_COL2,
+		PRE_COL3)
+		values (#{cusId,jdbcType=INTEGER}, #{plateNo,jdbcType=CHAR},
+		#{brand,jdbcType=VARCHAR},
+		#{brandTyp,jdbcType=VARCHAR},
+		#{frameNo,jdbcType=VARCHAR}, #{engineNo,jdbcType=VARCHAR},
+		#{cusIdNo,jdbcType=VARCHAR}, #{cusNme,jdbcType=VARCHAR},
+		#{cusAddr,jdbcType=VARCHAR},
+		#{cusTel,jdbcType=VARCHAR},
+		#{cusPhon,jdbcType=VARCHAR}, #{logDate,jdbcType=VARCHAR},
+		#{cusSts,jdbcType=CHAR}, #{busierId,jdbcType=INTEGER},
+		#{issuId,jdbcType=INTEGER},
+		#{distId,jdbcType=INTEGER},
+		#{insurId,jdbcType=INTEGER}, #{creDate,jdbcType=DATE},
+		#{updDate,jdbcType=DATE}, #{preCol1,jdbcType=VARCHAR},
+		#{preCol2,jdbcType=VARCHAR},
+		#{preCol3,jdbcType=VARCHAR})
+	</insert>
+	<!-- 插入客户信息如果为空取默认值 -->
+	<insert id="insertSelective" parameterType="com.zzfly.model.CustInfo">
+		insert into t_cust_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="cusId != null">
+				CUS_ID,
+			</if>
+			<if test="plateNo != null">
+				PLATE_NO,
+			</if>
+			<if test="brand != null">
+				BRAND,
+			</if>
+			<if test="brandTyp != null">
+				BRAND_TYP,
+			</if>
+			<if test="frameNo != null">
+				FRAME_NO,
+			</if>
+			<if test="engineNo != null">
+				ENGINE_NO,
+			</if>
+			<if test="cusIdNo != null">
+				CUS_ID_NO,
+			</if>
+			<if test="cusNme != null">
+				CUS_NME,
+			</if>
+			<if test="cusAddr != null">
+				CUS_ADDR,
+			</if>
+			<if test="cusTel != null">
+				CUS_TEL,
+			</if>
+			<if test="cusPhon != null">
+				CUS_PHON,
+			</if>
+			<if test="logDate != null">
+				LOG_DATE,
+			</if>
+			<if test="cusSts != null">
+				CUS_STS,
+			</if>
+			<if test="busierId != null">
+				BUSIER_ID,
+			</if>
+			<if test="issuId != null">
+				ISSU_ID,
+			</if>
+			<if test="distId != null">
+				DIST_ID,
+			</if>
+			<if test="insurId != null">
+				INSUR_ID,
+			</if>
+			<if test="creDate != null">
+				CRE_DATE,
+			</if>
+			<if test="updDate != null">
+				UPD_DATE,
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1,
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2,
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="cusId != null">
+				#{cusId,jdbcType=INTEGER},
+			</if>
+			<if test="plateNo != null">
+				#{plateNo,jdbcType=CHAR},
+			</if>
+			<if test="brand != null">
+				#{brand,jdbcType=VARCHAR},
+			</if>
+			<if test="brandTyp != null">
+				#{brandTyp,jdbcType=VARCHAR},
+			</if>
+			<if test="frameNo != null">
+				#{frameNo,jdbcType=VARCHAR},
+			</if>
+			<if test="engineNo != null">
+				#{engineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cusIdNo != null">
+				#{cusIdNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cusNme != null">
+				#{cusNme,jdbcType=VARCHAR},
+			</if>
+			<if test="cusAddr != null">
+				#{cusAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="cusTel != null">
+				#{cusTel,jdbcType=VARCHAR},
+			</if>
+			<if test="cusPhon != null">
+				#{cusPhon,jdbcType=VARCHAR},
+			</if>
+			<if test="logDate != null">
+				#{logDate,jdbcType=VARCHAR},
+			</if>
+			<if test="cusSts != null">
+				#{cusSts,jdbcType=CHAR},
+			</if>
+			<if test="busierId != null">
+				#{busierId,jdbcType=INTEGER},
+			</if>
+			<if test="issuId != null">
+				#{issuId,jdbcType=INTEGER},
+			</if>
+			<if test="distId != null">
+				#{distId,jdbcType=INTEGER},
+			</if>
+			<if test="insurId != null">
+				#{insurId,jdbcType=INTEGER},
+			</if>
+			<if test="creDate != null">
+				#{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				#{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				#{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				#{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				#{preCol3,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 根据字段是否为空选择修改客户基本信息 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.zzfly.model.CustInfo">
+		update t_cust_info
+		<set>
+			<if test="plateNo != null">
+				PLATE_NO = #{plateNo,jdbcType=CHAR},
+			</if>
+			<if test="brand != null">
+				BRAND = #{brand,jdbcType=VARCHAR},
+			</if>
+			<if test="brandTyp != null">
+				BRAND_TYP = #{brandTyp,jdbcType=VARCHAR},
+			</if>
+			<if test="frameNo != null">
+				FRAME_NO = #{frameNo,jdbcType=VARCHAR},
+			</if>
+			<if test="engineNo != null">
+				ENGINE_NO = #{engineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cusIdNo != null">
+				CUS_ID_NO = #{cusIdNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cusNme != null">
+				CUS_NME = #{cusNme,jdbcType=VARCHAR},
+			</if>
+			<if test="cusAddr != null">
+				CUS_ADDR = #{cusAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="cusTel != null">
+				CUS_TEL = #{cusTel,jdbcType=VARCHAR},
+			</if>
+			<if test="cusPhon != null">
+				CUS_PHON = #{cusPhon,jdbcType=VARCHAR},
+			</if>
+			<if test="logDate != null">
+				LOG_DATE = #{logDate,jdbcType=VARCHAR},
+			</if>
+			<if test="cusSts != null">
+				CUS_STS = #{cusSts,jdbcType=CHAR},
+			</if>
+			<if test="busierId != null">
+				BUSIER_ID = #{busierId,jdbcType=INTEGER},
+			</if>
+			<if test="issuId != null">
+				ISSU_ID = #{issuId,jdbcType=INTEGER},
+			</if>
+			<if test="distId != null">
+				DIST_ID = #{distId,jdbcType=INTEGER},
+			</if>
+			<if test="insurId != null">
+				INSUR_ID = #{insurId,jdbcType=INTEGER},
+			</if>
+			<if test="creDate != null">
+				CRE_DATE = #{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				UPD_DATE = #{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1 = #{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3 = #{preCol3,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where CUS_ID = #{cusId,jdbcType=INTEGER}
+	</update>
+	<!-- 覆盖修改客户信息 -->
+	<update id="updateByPrimaryKey" parameterType="com.zzfly.model.CustInfo">
+		update t_cust_info
+		set PLATE_NO = #{plateNo,jdbcType=CHAR},
+		BRAND =
+		#{brand,jdbcType=VARCHAR},
+		BRAND_TYP = #{brandTyp,jdbcType=VARCHAR},
+		FRAME_NO = #{frameNo,jdbcType=VARCHAR},
+		ENGINE_NO =
+		#{engineNo,jdbcType=VARCHAR},
+		CUS_ID_NO = #{cusIdNo,jdbcType=VARCHAR},
+		CUS_NME = #{cusNme,jdbcType=VARCHAR},
+		CUS_ADDR =
+		#{cusAddr,jdbcType=VARCHAR},
+		CUS_TEL = #{cusTel,jdbcType=VARCHAR},
+		CUS_PHON = #{cusPhon,jdbcType=VARCHAR},
+		LOG_DATE =
+		#{logDate,jdbcType=VARCHAR},
+		CUS_STS = #{cusSts,jdbcType=CHAR},
+		BUSIER_ID = #{busierId,jdbcType=INTEGER},
+		ISSU_ID =
+		#{issuId,jdbcType=INTEGER},
+		DIST_ID = #{distId,jdbcType=INTEGER},
+		INSUR_ID = #{insurId,jdbcType=INTEGER},
+		CRE_DATE =
+		#{creDate,jdbcType=DATE},
+		UPD_DATE = #{updDate,jdbcType=DATE},
+		PRE_COL1
+		= #{preCol1,jdbcType=VARCHAR},
+		PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+		PRE_COL3 = #{preCol3,jdbcType=VARCHAR}
+		where CUS_ID =
+		#{cusId,jdbcType=INTEGER}
+	</update>
+	<!-- 自定义查询出某个客户的所有信息 -->
+	<select id="selectCustParticularInfo" resultMap="allCustInfoMap"
+		parameterType="java.lang.Integer">
+		select
+		t1.*
+		,t2.INSUR_ID
+		,t2.CUS_ID as CUS_ID_T2
+		,T2.ST_DATE
+		,t2.EX_DATE
+		,t2.INSUR_COM
+		,t2.CHL
+		,t2.ADDR
+		,t2.DIST_DATE
+		,t2.GIFT
+		,t2.CRE_DATE
+		,t3.CUST_INS_ID
+		,t3.CUS_ID as CUS_ID_T3
+		,t3.INS_ID
+		as INS_ID_T3
+		,t3.INS_AMT
+		,t3.INS_S_AMT
+		,t3.INS_LIM
+		,t4.INS_ID
+		,t4.INS_NME
+		,t4.INS_KND
+		,t4.INS_STS
+		,t5.U_ID as U_ID_T5
+		,t5.U_CODE as U_CODE_T5
+		,t5.U_NME as U_NME_T5
+		,t6.U_ID as U_ID_T6
+		,t6.U_CODE as U_CODE_T6
+		,t6.U_NME as U_NME_T6
+		,t7.U_ID as U_ID_T7
+		,t7.U_CODE as U_CODE_T7
+		,t7.U_NME as U_NME_T7
+		from t_cust_info t1
+		left JOIN
+		t_insur_info t2
+		on
+		t1.CUS_ID = t2.CUS_ID
+		left JOIN
+		t_cust_ins t3
+		on
+		t1.CUS_ID = t3.CUS_ID
+		left join
+		t_ins_info t4
+		on
+		t3.INS_ID = t4.INS_ID
+		left JOIN
+		t_user_info t5
+		ON
+		t1.BUSIER_ID = t5.U_ID
+		left JOIN
+		t_user_info t6
+		on
+		t1.ISSU_ID = t6.U_ID
+		left JOIN
+		t_user_info t7
+		ON
+		t1.DIST_ID = t7.U_ID
+		where 1=1
+		and t1.CUS_ID =
+		#{cusId,jdbcType=INTEGER}
+	</select>
+	<!-- 自定义Map(allCustInfoMap) -->
+	<resultMap type="com.zzfly.model.CustInfo" id="allCustInfoMap">
+		<id column="CUS_ID" property="cusId" jdbcType="INTEGER" />
+		<result column="PLATE_NO" property="plateNo" jdbcType="CHAR" />
+		<result column="BRAND" property="brand" jdbcType="VARCHAR" />
+		<result column="BRAND_TYP" property="brandTyp" jdbcType="VARCHAR" />
+		<result column="FRAME_NO" property="frameNo" jdbcType="VARCHAR" />
+		<result column="ENGINE_NO" property="engineNo" jdbcType="VARCHAR" />
+		<result column="CUS_ID_NO" property="cusIdNo" jdbcType="VARCHAR" />
+		<result column="CUS_NME" property="cusNme" jdbcType="VARCHAR" />
+		<result column="CUS_ADDR" property="cusAddr" jdbcType="VARCHAR" />
+		<result column="CUS_TEL" property="cusTel" jdbcType="VARCHAR" />
+		<result column="CUS_PHON" property="cusPhon" jdbcType="VARCHAR" />
+		<result column="LOG_DATE" property="logDate" jdbcType="VARCHAR" />
+		<result column="CUS_STS" property="cusSts" jdbcType="CHAR" />
+		<result column="BUSIER_ID" property="busierId" jdbcType="INTEGER" />
+		<result column="ISSU_ID" property="issuId" jdbcType="INTEGER" />
+		<result column="DIST_ID" property="distId" jdbcType="INTEGER" />
+		<result column="INSUR_ID" property="insurId" jdbcType="INTEGER" />
+		<result column="CRE_DATE" property="creDate" jdbcType="DATE" />
+		<result column="UPD_DATE" property="updDate" jdbcType="DATE" />
+		<result column="PRE_COL1" property="preCol1" jdbcType="VARCHAR" />
+		<result column="PRE_COL2" property="preCol2" jdbcType="VARCHAR" />
+		<result column="PRE_COL3" property="preCol3" jdbcType="VARCHAR" />
+		<association property="insurInfo" column="CUS_ID"
+			javaType="com.zzfly.model.InsurInfo">
+			<id column="INSUR_ID" property="insurId" jdbcType="INTEGER" />
+			<result column="CUS_ID_T2" property="cusId" jdbcType="INTEGER" />
+			<result column="ST_DATE" property="stDate" jdbcType="DATE" />
+			<result column="EX_DATE" property="exDate" jdbcType="DATE" />
+			<result column="INSUR_COM" property="insurCom" jdbcType="VARCHAR" />
+			<result column="CHL" property="chl" jdbcType="CHAR" />
+			<result column="ADDR" property="addr" jdbcType="VARCHAR" />
+			<result column="DIST_DATE" property="distDate" jdbcType="VARCHAR" />
+			<result column="GIFT" property="gift" jdbcType="VARCHAR" />
+			<result column="CRE_DATE" property="creDate" jdbcType="DATE" />
+		</association>
+		<association property="userInfo" column="BUSIER_ID"
+			javaType="com.zzfly.model.UserInfo">
+			<id column="U_ID_T5" property="uId" jdbcType="INTEGER" />
+			<result column="U_CODE_T5" property="uCode" jdbcType="VARCHAR" />
+			<result column="U_NME_T5" property="uNme" jdbcType="VARCHAR" />
+		</association>
+		<association property="userInfo2" column="ISSU_ID"
+			javaType="com.zzfly.model.UserInfo">
+			<id column="U_ID_T6" property="uId" jdbcType="INTEGER" />
+			<result column="U_CODE_T6" property="uCode" jdbcType="VARCHAR" />
+			<result column="U_NME_T6" property="uNme" jdbcType="VARCHAR" />
+		</association>
+		<association property="userInfo3" column="DIST_ID"
+			javaType="com.zzfly.model.UserInfo">
+			<id column="U_ID_T7" property="uId" jdbcType="INTEGER" />
+			<result column="U_CODE_T7" property="uCode" jdbcType="VARCHAR" />
+			<result column="U_NME_T7" property="uNme" jdbcType="VARCHAR" />
+		</association>
+		<collection property="lCustIns" column="CUS_ID"
+			ofType="com.zzfly.model.CustIns">
+			<id column="CUST_INS_ID" property="custInsId" jdbcType="INTEGER" />
+			<result column="CUS_ID_T3" property="cusId" jdbcType="INTEGER" />
+			<result column="INS_ID_T3" property="insId" jdbcType="INTEGER" />
+			<result column="INS_AMT" property="insAmt" jdbcType="DECIMAL" />
+			<result column="INS_S_AMT" property="insSAmt" jdbcType="DECIMAL" />
+			<result column="INS_LIM" property="insLim" jdbcType="VARCHAR" />
+			<association property="insInfo" column="INS_ID_T3"
+				javaType="com.zzfly.model.InsInfo">
+				<id column="INS_ID" property="insId" jdbcType="INTEGER" />
+				<result column="INS_NME" property="insNme" jdbcType="VARCHAR" />
+				<result column="INS_KND" property="insKnd" jdbcType="CHAR" />
+				<result column="INS_STS" property="insSts" jdbcType="CHAR" />
+			</association>
+		</collection>
+	</resultMap>
+</mapper>

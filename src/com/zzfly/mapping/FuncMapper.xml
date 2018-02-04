@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 功能菜单表sql映射 -->
+<mapper namespace="com.zzfly.dao.FuncMapper">
+	<resultMap id="BaseResultMap" type="com.zzfly.model.Func">
+		<id column="FUNC_ID" property="funcId" jdbcType="INTEGER" />
+		<result column="FUNC_CODE" property="funcCode" jdbcType="VARCHAR" />
+		<result column="FUNC_NME" property="funcNme" jdbcType="VARCHAR" />
+		<result column="FUNC_S_NME" property="funcSNme" jdbcType="VARCHAR" />
+		<result column="P_FUNC_ID" property="pFuncId" jdbcType="INTEGER" />
+		<result column="P_FUNC_CODE" property="pFuncCode" jdbcType="VARCHAR" />
+		<result column="FUNC_IMG" property="funcImg" jdbcType="VARCHAR" />
+		<result column="FUNC_URL" property="funcUrl" jdbcType="VARCHAR" />
+		<result column="FUNC_STS" property="funcSts" jdbcType="CHAR" />
+		<result column="CRE_DATE" property="creDate" jdbcType="DATE" />
+		<result column="UPD_DATE" property="updDate" jdbcType="DATE" />
+		<result column="PRE_COL1" property="preCol1" jdbcType="VARCHAR" />
+		<result column="PRE_COL2" property="preCol2" jdbcType="VARCHAR" />
+		<result column="PRE_COL3" property="preCol3" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		FUNC_ID, FUNC_CODE, FUNC_NME, FUNC_S_NME, P_FUNC_ID,
+		P_FUNC_CODE, FUNC_IMG,
+		FUNC_URL,
+		FUNC_STS, CRE_DATE, UPD_DATE, PRE_COL1,
+		PRE_COL2, PRE_COL3
+	</sql>
+	<!-- 根据主键查询 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_func
+		where FUNC_ID = #{funcId,jdbcType=INTEGER}
+	</select>
+	<!-- 查询所有的功能方式 -->
+	<select id="findAllFunc" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_func
+		where 1=1
+		order by FUNC_S_NME asc
+	</select>
+	<!-- 根据主键删除功能 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_func
+		where FUNC_ID = #{funcId,jdbcType=INTEGER}
+	</delete>
+	<!-- 根据字段查询所有的功能 -->
+	<select id="findFuncs" parameterType="com.zzfly.model.Func"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_func
+		where 1=1
+		<if test="pFuncId != null">
+			and p_func_id = #{pFuncId,jdbcType=INTEGER}
+		</if>
+		<if test="funcId != null">
+			and func_id = #{funcId,jdbcType=INTEGER}
+		</if>
+		<if test="funcCode != null">
+			and FUNC_CODE = #{funcCode,jdbcType=VARCHAR}
+		</if>
+		order by FUNC_S_NME asc
+	</select>
+	<!-- 插入功能 直接覆盖 -->
+	<insert id="insert" parameterType="com.zzfly.model.Func">
+		insert into t_func (FUNC_ID,
+		FUNC_CODE, FUNC_NME,
+		FUNC_S_NME, P_FUNC_ID, P_FUNC_CODE,
+		FUNC_IMG,
+		FUNC_URL, FUNC_STS,
+		CRE_DATE, UPD_DATE, PRE_COL1,
+		PRE_COL2, PRE_COL3)
+		values (#{funcId,jdbcType=INTEGER}, #{funcCode,jdbcType=VARCHAR},
+		#{funcNme,jdbcType=VARCHAR},
+		#{funcSNme,jdbcType=VARCHAR},
+		#{pFuncId,jdbcType=INTEGER}, #{pFuncCode,jdbcType=VARCHAR},
+		#{funcImg,jdbcType=VARCHAR}, #{funcUrl,jdbcType=VARCHAR},
+		#{funcSts,jdbcType=CHAR},
+		#{creDate,jdbcType=DATE},
+		#{updDate,jdbcType=DATE}, #{preCol1,jdbcType=VARCHAR},
+		#{preCol2,jdbcType=VARCHAR}, #{preCol3,jdbcType=VARCHAR})
+	</insert>
+	<!-- 根据字段是否为空进行修改 -->
+	<insert id="insertSelective" parameterType="com.zzfly.model.Func">
+		insert into t_func
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="funcId != null">
+				FUNC_ID,
+			</if>
+			<if test="funcCode != null">
+				FUNC_CODE,
+			</if>
+			<if test="funcNme != null">
+				FUNC_NME,
+			</if>
+			<if test="funcSNme != null">
+				FUNC_S_NME,
+			</if>
+			<if test="pFuncId != null">
+				P_FUNC_ID,
+			</if>
+			<if test="pFuncCode != null">
+				P_FUNC_CODE,
+			</if>
+			<if test="funcImg != null">
+				FUNC_IMG,
+			</if>
+			<if test="funcUrl != null">
+				FUNC_URL,
+			</if>
+			<if test="funcSts != null">
+				FUNC_STS,
+			</if>
+			<if test="creDate != null">
+				CRE_DATE,
+			</if>
+			<if test="updDate != null">
+				UPD_DATE,
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1,
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2,
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="funcId != null">
+				#{funcId,jdbcType=INTEGER},
+			</if>
+			<if test="funcCode != null">
+				#{funcCode,jdbcType=VARCHAR},
+			</if>
+			<if test="funcNme != null">
+				#{funcNme,jdbcType=VARCHAR},
+			</if>
+			<if test="funcSNme != null">
+				#{funcSNme,jdbcType=VARCHAR},
+			</if>
+			<if test="pFuncId != null">
+				#{pFuncId,jdbcType=INTEGER},
+			</if>
+			<if test="pFuncCode != null">
+				#{pFuncCode,jdbcType=VARCHAR},
+			</if>
+			<if test="funcImg != null">
+				#{funcImg,jdbcType=VARCHAR},
+			</if>
+			<if test="funcUrl != null">
+				#{funcUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="funcSts != null">
+				#{funcSts,jdbcType=CHAR},
+			</if>
+			<if test="creDate != null">
+				#{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				#{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				#{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				#{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				#{preCol3,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 修改 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.zzfly.model.Func">
+		update t_func
+		<set>
+			<if test="funcCode != null">
+				FUNC_CODE = #{funcCode,jdbcType=VARCHAR},
+			</if>
+			<if test="funcNme != null">
+				FUNC_NME = #{funcNme,jdbcType=VARCHAR},
+			</if>
+			<if test="funcSNme != null">
+				FUNC_S_NME = #{funcSNme,jdbcType=VARCHAR},
+			</if>
+			<if test="pFuncId != null">
+				P_FUNC_ID = #{pFuncId,jdbcType=INTEGER},
+			</if>
+			<if test="pFuncCode != null">
+				P_FUNC_CODE = #{pFuncCode,jdbcType=VARCHAR},
+			</if>
+			<if test="funcImg != null">
+				FUNC_IMG = #{funcImg,jdbcType=VARCHAR},
+			</if>
+			<if test="funcUrl != null">
+				FUNC_URL = #{funcUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="funcSts != null">
+				FUNC_STS = #{funcSts,jdbcType=CHAR},
+			</if>
+			<if test="creDate != null">
+				CRE_DATE = #{creDate,jdbcType=DATE},
+			</if>
+			<if test="updDate != null">
+				UPD_DATE = #{updDate,jdbcType=DATE},
+			</if>
+			<if test="preCol1 != null">
+				PRE_COL1 = #{preCol1,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol2 != null">
+				PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+			</if>
+			<if test="preCol3 != null">
+				PRE_COL3 = #{preCol3,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where FUNC_ID = #{funcId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.zzfly.model.Func">
+		update t_func
+		set
+		FUNC_CODE = #{funcCode,jdbcType=VARCHAR},
+		FUNC_NME =
+		#{funcNme,jdbcType=VARCHAR},
+		FUNC_S_NME = #{funcSNme,jdbcType=VARCHAR},
+		P_FUNC_ID = #{pFuncId,jdbcType=INTEGER},
+		P_FUNC_CODE =
+		#{pFuncCode,jdbcType=VARCHAR},
+		FUNC_IMG = #{funcImg,jdbcType=VARCHAR},
+		FUNC_URL = #{funcUrl,jdbcType=VARCHAR},
+		FUNC_STS =
+		#{funcSts,jdbcType=CHAR},
+		CRE_DATE = #{creDate,jdbcType=DATE},
+		UPD_DATE
+		= #{updDate,jdbcType=DATE},
+		PRE_COL1 = #{preCol1,jdbcType=VARCHAR},
+		PRE_COL2 = #{preCol2,jdbcType=VARCHAR},
+		PRE_COL3 =
+		#{preCol3,jdbcType=VARCHAR}
+		where FUNC_ID = #{funcId,jdbcType=INTEGER}
+	</update>
+</mapper>

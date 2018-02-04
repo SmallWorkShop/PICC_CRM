@@ -1,0 +1,29 @@
+@CHARSET "UTF-8";
+
+.zzTable {
+	border: 1px solid #95B8E7;
+	border-collapse: collapse;
+}
+
+.zzTd1 {
+	border: 1px solid #95B8E7;
+	font-weight: bold;
+	color: #0E2D5F;
+	font-size: 12px;
+	height: 26px;
+	width: 200px;
+}
+
+.zzTd2 {
+	border: 1px solid #95B8E7;
+	color: #0E2D5F;
+	font-size: 12px;
+	height: 26px;
+	width: 200px;
+}
+
+.zzTd3 {
+	color: #0E2D5F;
+	font-size: 12px;
+	font-weight: 600;
+}
